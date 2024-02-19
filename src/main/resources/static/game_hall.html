@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>游戏大厅</title>
+</head>
+<body>
+<div class="nav">
+    五子棋
+</div>
+<div class="container">
+    <div>
+<!--        显示用户信息-->
+        <div id="screen"></div>
+        <div id="match-button">开始匹配</div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script>
+    $.ajax({
+        type:'get',
+        url:'/userinfo',
+        success: function (body){
+            let screenDiv=document.querySelector('#screen');
+            screenDiv.innerHTML='玩家: '+body.username+' 分数: '+body.score+'<br> 比赛场次: '+body.totalCount+' 获胜场次: '+body.winCount
+        },
+        error:function (){
+            alert("获取用户信息失败");
+        }
+    });
+//     初始化websocket，实现前端匹配逻辑
+    let websocket=new WebSocket('ws://127.0.0.1:8080/findMatch);
+</script>
+</body>
+</html>

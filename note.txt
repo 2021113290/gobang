@@ -1,0 +1,69 @@
+
+用户模块：
+    登录：
+     请求：POST /login HTTP/1.1
+          Content-Type:application/x-ww-form--urlencoded
+
+          username=zhangsan&password=123
+     响应：HTTP/1.1 200 OK
+          {
+            userId:1,
+            username:'zhangsan',
+            score:1000,
+            totalCount:0,
+            winCount:0
+          }
+          如果登陆失败返回无效user对象，属性都是空的
+    注册：
+     请求：POST/register HTTP/1.1
+          Content-Type:application/x-ww-form--urlencoded
+
+          username=zhangsan&password=123
+     响应：HTTP/1.1 200 OK
+          Content-Type:application/json
+          {
+               userId:1,
+               username:'zhangsan',
+               score:1000,
+               totalCount:0,
+               winCount:0
+          }
+    获取用户信息：
+     请求：GET/userido/1.1
+     响应:HTTP/1.1 200 OK
+         Content-Type:application/json
+                   {
+                        userId:1,
+                        username:'zhangsan',
+                        score:1000,
+                        totalCount:0,
+                        winCount:0
+                   }
+
+匹配模块：实力相近的玩家pk---消息推送机制
+    websocket传输json格式的文本数据
+    匹配：
+     请求：ws://127.0.0.1:8080/findMatch
+           {
+           message:'startMatch'/'stopMatch',
+           }
+     响应1：ws://127.0.0.1:8080/findMatch
+  立即返回         {
+           ok:true,//匹配成功
+           reason:'',//匹配失败的原因
+           message:'startMatch'/'stopMatch',
+           }
+     响应1：ws://127.0.0.1:8080/findMatch
+真正匹配成功返回 {
+         ok:true,//匹配成功
+         reason:''',//匹配失败的原因
+         message:'matchSuccess',
+         }
+
+匹配算法：从在匹配的玩家中，选出分数尽量相近的玩家
+     玩家分为三类：Normal score<2000
+                High score>=2000 && score<3000
+                VeryHigh score>=3000
+                给这三个等级分配三个不同队列，根据玩家分数，把玩家用户信息放到相应队列
+                线程扫描匹配队列：队列中元素凑成一对就取出来，放到一个游戏房间中
+
